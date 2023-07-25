@@ -12,13 +12,13 @@ requirements = [
 
 
 setup(
-    name="autocut_fix",
+    name="autocut",
     long_description_content_type='text/markdown',
     install_requires=requirements,
     packages=find_packages(),
     entry_points={
         "console_scripts": [
-            "autocut_fix = autocut_fix.main:main",
+            "autocut = autocut.main:main",
         ]
     },
 )
