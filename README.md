@@ -27,7 +27,7 @@ AutoCut 将持续对这个文件夹里视频进行字幕抽取和剪切。例如
 首先安装 Python 包
 
 ```
-pip install git+https://github.com/ronghuaxueleng/autocut.git
+pip install autocut-fix
 ```
 
 ## 本地安装测试
