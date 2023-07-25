@@ -7,7 +7,7 @@ AutoCut 对你的视频自动生成字幕。然后你选择需要保留的句子
 假如你录制的视频放在 `2022-11-04/` 这个文件夹里。那么运行
 
 ```bash
-autocut -d 2022-11-04
+autocut_fix -d 2022-11-04
 ```
 
 > 提示：如果你使用 OBS 录屏，可以在 `设置->高级->录像->文件名格式` 中将空格改成 `/`，即 `%CCYY-%MM-%DD/%hh-%mm-%ss`。那么视频文件将放在日期命名的文件夹里。
@@ -69,13 +69,13 @@ git clone https://github.com/mli/autocut.git
 进入项目根目录，然后构建 docker 映像。
 
 ```bash
-docker build -t autocut .
+docker build -t autocut_fix .
 ```
 
 运行下面的命令创建 docker 容器，就可以直接使用了。
 
 ```bash
-docker run -it --rm -v E:\autocut:/autocut/video autocut /bin/bash
+docker run -it --rm -v E:\autocut_fix:/autocut_fix/video autocut_fix /bin/bash
 ```
 
 其中 `-v` 是将主机存放视频的文件夹 `E:\autocut` 映射到虚拟机的 `/autocut/video` 目录。`E:\autocut` 是主机存放视频的目录，需修改为自己主机存放视频的目录。
@@ -85,13 +85,13 @@ docker run -it --rm -v E:\autocut:/autocut/video autocut /bin/bash
 使用 GPU 加速需要主机有 Nvidia 的显卡并安装好相应驱动。然后在项目根目录，执行下面的命令构建 docker 映像。
 
 ```bash
-docker build -f ./Dockerfile.cuda -t autocut-gpu .
+docker build -f ./Dockerfile.cuda -t autocut_fix-gpu .
 ```
 
 使用 GPU 加速时，运行 docker 容器需添加参数 `--gpus all`。
 
 ```bash
-docker run --gpus all -it --rm -v E:\autocut:/autocut/video autocut-gpu
+docker run --gpus all -it --rm -v E:\autocut_fix:/autocut_fix/video autocut_fix-gpu
 ```
 
 ## 更多使用选项
@@ -99,13 +99,13 @@ docker run --gpus all -it --rm -v E:\autocut:/autocut/video autocut-gpu
 ### 转录某个视频生成 `.srt` 和 `.md` 结果。
 
 ```bash
-autocut -t 22-52-00.mp4
+autocut_fix -t 22-52-00.mp4
 ```
 
 1. 如果对转录质量不满意，可以使用更大的模型，例如
 
     ```bash
-    autocut -t 22-52-00.mp4 --whisper-model large
+    autocut_fix -t 22-52-00.mp4 --whisper-model large
     ```
 
     默认是 `small`。更好的模型是 `medium` 和 `large`，但推荐使用 GPU 获得更好的速度。也可以使用更快的 `tiny` 和 `base`，但转录质量会下降。
@@ -114,7 +114,7 @@ autocut -t 22-52-00.mp4
 ### 剪切某个视频
 
 ```bash
-autocut -c 22-52-00.mp4 22-52-00.srt 22-52-00.md
+autocut_fix -c 22-52-00.mp4 22-52-00.srt 22-52-00.md
 ```
 
 1. 默认视频比特率是 `--bitrate 10m`，你可以根据需要调大调小。
@@ -122,9 +122,9 @@ autocut -c 22-52-00.mp4 22-52-00.srt 22-52-00.md
 3. 如果仅有 `srt` 文件，编辑不方便可以使用如下命令生成 `md` 文件，然后编辑 `md` 文件即可，但此时会完全对照 `srt` 生成，不会出现 `no speech` 等提示文本。
 
    ```bash
-   autocut -m test.srt test.mp4
-   autocut -m test.mp4 test.srt # 支持视频和字幕乱序传入
-   autocut -m test.srt # 也可以只传入字幕文件
+   autocut_fix -m test.srt test.mp4
+   autocut_fix -m test.mp4 test.srt # 支持视频和字幕乱序传入
+   autocut_fix -m test.srt # 也可以只传入字幕文件
    ```
 
 
@@ -144,8 +144,8 @@ autocut -c 22-52-00.mp4 22-52-00.srt 22-52-00.md
    AutoCut 默认输出编码是 `utf-8`. 确保你的编辑器也使用了 `utf-8` 解码。你可以通过 `--encoding` 指定其他编码格式。但是需要注意生成字幕文件和使用字幕文件剪辑时的编码格式需要一致。例如使用 `gbk`。
 
     ```bash
-    autocut -t test.mp4 --encoding=gbk
-    autocut -c test.mp4 test.srt test.md --encoding=gbk
+    autocut_fix -t test.mp4 --encoding=gbk
+    autocut_fix -c test.mp4 test.srt test.md --encoding=gbk
     ```
 
     如果使用了其他编码格式（如 `gbk` 等）生成 `md` 文件并用 Typora 打开后，该文件可能会被 Typora 自动转码为其他编码格式，此时再通过生成时指定的编码格式进行剪辑时可能会出现编码不支持等报错。因此可以在使用 Typora 编辑后再通过 VSCode 等修改到你需要的编码格式进行保存后再使用剪辑功能。
@@ -165,7 +165,7 @@ autocut -c 22-52-00.mp4 22-52-00.srt 22-52-00.md
    whisper 的大模型需要一定的 GPU 显存。如果你的显存不够，你可以用小一点的模型，例如 `small`。如果你仍然想用大模型，可以通过 `--device` 来强制使用 CPU。例如
 
    ```bash
-   autocut -t 11-28-18.mp4 --whisper-model large --device cpu
+   autocut_fix -t 11-28-18.mp4 --whisper-model large --device cpu
    ```
 
 4. **能不能使用 `pip` 安装?**
