@@ -1,6 +1,6 @@
 FROM python:3.9-slim as base
 
-RUN mkdir /autocut_fix
+RUN mkdir /autocut
 COPY ./ /autocut
 WORKDIR /autocut
 

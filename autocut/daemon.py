@@ -52,7 +52,7 @@ class Daemon:
                 cut.Cutter(args).run()
                 self.sleep = 1
 
-        args.inputs = [os.path.join(folder, "autocut_fix.md")]
+        args.inputs = [os.path.join(folder, "autocut.md")]
         merger = cut.Merger(args)
         merger.write_md(media_files)
         merger.run()

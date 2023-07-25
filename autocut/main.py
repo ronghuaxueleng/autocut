@@ -12,7 +12,7 @@ def main():
     )
 
     logging.basicConfig(
-        format="[autocut_fix:%(filename)s:L%(lineno)d] %(levelname)-6s %(message)s"
+        format="[autocut:%(filename)s:L%(lineno)d] %(levelname)-6s %(message)s"
     )
     logging.getLogger().setLevel(logging.INFO)
 
