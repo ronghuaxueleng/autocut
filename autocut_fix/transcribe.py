@@ -183,7 +183,7 @@ class Transcribe:
         md.add_video(os.path.basename(video_fn))
         md.add(
             f"\nTexts generated from [{os.path.basename(srt_fn)}]({os.path.basename(srt_fn)})."
-            "Mark the sentences to keep for autocut.\n"
+            "Mark the sentences to keep for autocut_fix.\n"
             "The format is [subtitle_index,duration_in_second] subtitle context.\n\n"
         )
 
