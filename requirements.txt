@@ -1,0 +1,7 @@
+srt
+moviepy
+opencc-python-reimplemented
+torchaudio
+parameterized
+openai-whisper
+tqdm

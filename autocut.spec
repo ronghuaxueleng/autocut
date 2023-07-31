@@ -18,28 +18,26 @@ datas += copy_metadata('torch')
 datas += collect_data_files('transformers', include_py_files=True)
 
 datas += [(path.join(
-    'D:/Program Files/Python/Python3106/Lib/site-packages',
+    './python/Lib/site-packages',
     'moviepy'
 ), 'moviepy')]
 datas += [(path.join(
-    'D:/Program Files/Python/Python3106/Lib/site-packages',
+    './python/Lib/site-packages',
     'imageio_ffmpeg'
 ), 'imageio_ffmpeg')]
 datas += [(path.join(
-    'D:/Program Files/Python/Python3106/Lib/site-packages',
+    './python/Lib/site-packages',
     'torchaudio'
 ), 'torchaudio')]
 datas += [(path.join(
-    'D:/Program Files/Python/Python3106/Lib/site-packages',
+    './python/Lib/site-packages',
     'whisper'
 ), 'whisper')]
 datas += [(path.join(
-    'D:/Program Files/Python/Python3106/Lib/site-packages',
+    './python/Lib/site-packages',
     'opencc'
 ), 'opencc')]
 datas += [('./snakers4_silero-vad_master', './snakers4_silero-vad_master')]
-if not plat == 'windows':
-    datas += [('./build.sh', './')]
 
 block_cipher = None
 
