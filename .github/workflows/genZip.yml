@@ -34,7 +34,7 @@ jobs:
     - name: Load Release URL File from release job
       uses: actions/download-artifact@v1
       with:
-        name: release_url
+        name: https://github.com/ronghuaxueleng/autocut/releases/tag/v0.1
     - name: Get Release File Name & Upload URL
       id: get_release_info
       shell: bash
