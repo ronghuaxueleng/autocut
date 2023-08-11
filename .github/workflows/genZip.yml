@@ -1,0 +1,55 @@
+name: 编译爬虫
+on: 
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+    - name: 安装Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - name: 安装依赖
+      run: |
+        python -m pip install --upgrade pip
+        pip install virtualenv
+        python -m virtualenv ./python
+    - name: 开始编译
+      run: |
+        python\Scripts\activate
+        pip install -r requirements.txt
+        pyinstaller autocut.spec -y
+    - name: 打包zip文件
+      uses: vimtor/action-zip@v1
+      with:
+        files: ./dist
+        dest: ./dist/autocut_windows.zip
+    - name: Load Release URL File from release job
+      uses: actions/download-artifact@v1
+      with:
+        name: release_url
+    - name: Get Release File Name & Upload URL
+      id: get_release_info
+      shell: bash
+      run: |
+        value=`cat release_url/release_url.txt`
+        echo ::set-output name=upload_url::$value
+    - name: Upload Release Asset
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.AUTH_PAT }}
+      with:
+        upload_url: ${{ steps.get_release_info.outputs.upload_url }}
+        asset_path: ./dist/${{ matrix.OUT_FILE_NAME}}
+        asset_name: ${{ matrix.OUT_FILE_NAME}}
+        asset_content_type: ${{ matrix.ASSET_MIME}}
+    - name: 删除过多的workflows
+      uses: Mattraks/delete-workflow-runs@main
+      with:
+        token: ${{ secrets.AUTH_PAT }}
+        repository: ${{ github.repository }}
+        retain_days: 1
