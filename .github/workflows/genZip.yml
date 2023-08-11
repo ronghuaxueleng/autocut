@@ -23,6 +23,8 @@ jobs:
         pip install -r requirements.txt
         pip install pyinstaller
         pip install distribution
+        pip install packaging
+        pip install tokenizers
         pyinstaller autocut.spec -y
     - name: 打包zip文件
       uses: vimtor/action-zip@v1
