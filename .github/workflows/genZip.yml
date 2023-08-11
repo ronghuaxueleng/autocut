@@ -1,4 +1,4 @@
-name: 编译爬虫
+name: 编译Windows文件
 on: 
   workflow_dispatch:
 jobs:
@@ -21,6 +21,7 @@ jobs:
       run: |
         python\Scripts\activate
         pip install -r requirements.txt
+        pip install pyinstaller
         pyinstaller autocut.spec -y
     - name: 打包zip文件
       uses: vimtor/action-zip@v1
