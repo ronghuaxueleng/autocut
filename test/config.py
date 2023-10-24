@@ -35,6 +35,7 @@ TEST_MEDIA_FILE = [
     "test003.mkv",
     "test004.flv",
     "test005.mp3",
+    "test006.MP4",
 ]
 
 TEST_MEDIA_FILE_LANG = ["test001_en.mp4"]
@@ -53,6 +54,8 @@ class TestArgs:
         device=None,
         vad=False,
         force=False,
+        whisper_mode="whisper",
+        openai_rpm=3,
     ):
         self.inputs = []
         self.bitrate = bitrate
@@ -64,3 +67,5 @@ class TestArgs:
         self.device = device
         self.vad = vad
         self.force = force
+        self.whisper_mode = whisper_mode
+        self.openai_rpm = openai_rpm

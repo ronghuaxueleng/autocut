@@ -2,7 +2,12 @@
 
 AutoCut 对你的视频自动生成字幕。然后你选择需要保留的句子，AutoCut 将对你视频中对应的片段裁切并保存。你无需使用视频编辑软件，只需要编辑文本文件即可完成剪切。
 
-本项目是`https://github.com/mli/autocut.git`的优化版本，原项目的`whisper`安装不上，本项目替换成`openai-whisper`
+本项目是`https://github.com/mli/autocut.git`的优化版本
+**2023.8.13更新**：支持调用 Openai Whisper API
+```shell
+export OPENAI_API_KEY=sk-xxx
+autocut -t xxx --whisper-mode=openai --openai-rpm=3
+```
 
 ## 使用例子
 
@@ -27,7 +32,7 @@ AutoCut 将持续对这个文件夹里视频进行字幕抽取和剪切。例如
 首先安装 Python 包
 
 ```
-pip install autocut-fix
+pip install git+https://github.com/ronghuaxueleng/autocut.git
 ```
 
 ## 本地安装测试
@@ -56,6 +61,44 @@ brew install ffmpeg
 
 # on Windows using Scoop (https://scoop.sh/)
 scoop install ffmpeg
+```
+
+## Docker 安装
+
+首先将项目克隆到本地。
+
+```bash
+git clone https://github.com/mli/autocut.git
+```
+
+### 安装 CPU 版本
+
+进入项目根目录，然后构建 docker 映像。
+
+```bash
+docker build -t autocut .
+```
+
+运行下面的命令创建 docker 容器，就可以直接使用了。
+
+```bash
+docker run -it --rm -v E:\autocut:/autocut/video autocut /bin/bash
+```
+
+其中 `-v` 是将主机存放视频的文件夹 `E:\autocut` 映射到虚拟机的 `/autocut/video` 目录。`E:\autocut` 是主机存放视频的目录，需修改为自己主机存放视频的目录。
+
+### 安装 GPU 版本
+
+使用 GPU 加速需要主机有 Nvidia 的显卡并安装好相应驱动。然后在项目根目录，执行下面的命令构建 docker 映像。
+
+```bash
+docker build -f ./Dockerfile.cuda -t autocut-gpu .
+```
+
+使用 GPU 加速时，运行 docker 容器需添加参数 `--gpus all`。
+
+```bash
+docker run --gpus all -it --rm -v E:\autocut:/autocut/video autocut-gpu
 ```
 
 ## 更多使用选项
@@ -96,10 +139,9 @@ autocut -c 22-52-00.mp4 22-52-00.srt 22-52-00.md
 
 
 1. 讲得流利的视频的转录质量会高一些，这因为是 Whisper 训练数据分布的缘故。对一个视频，你可以先粗选一下句子，然后在剪出来的视频上再剪一次。
-2. ~~最终视频生成的字幕通常还需要做一些小编辑。你可以直接编辑`md`文件（比`srt`文件更紧凑，且嵌入了视频）。然后使用 `autocut -s 22-52-00.md 22-52-00.srt` 来生成更新的字幕 `22-52-00_edited.srt`。注意这里会无视句子是不是被选中，而是全部转换成 `srt`。~~
-3. 最终视频生成的字幕通常还需要做一些小编辑。但 `srt` 里面空行太多。你可以使用 `autocut -s 22-52-00.srt` 来生成一个紧凑些的版本 `22-52-00_compact.srt` 方便编辑（这个格式不合法，但编辑器，例如 VS Code，还是会进行语法高亮）。编辑完成后，`autocut -s 22-52-00_compact.srt` 转回正常格式。
-4. 用 Typora 和 VS Code 编辑 Markdown 都很方便。他们都有对应的快捷键 mark 一行或者多行。但 VS Code 视频预览似乎有点问题。
-5. 视频是通过 ffmpeg 导出。在 Apple M1 芯片上它用不了 GPU，导致导出速度不如专业视频软件。
+2. 最终视频生成的字幕通常还需要做一些小编辑。但 `srt` 里面空行太多。你可以使用 `autocut -s 22-52-00.srt` 来生成一个紧凑些的版本 `22-52-00_compact.srt` 方便编辑（这个格式不合法，但编辑器，例如 VS Code，还是会进行语法高亮）。编辑完成后，`autocut -s 22-52-00_compact.srt` 转回正常格式。
+3. 用 Typora 和 VS Code 编辑 Markdown 都很方便。他们都有对应的快捷键 mark 一行或者多行。但 VS Code 视频预览似乎有点问题。
+4. 视频是通过 ffmpeg 导出。在 Apple M1 芯片上它用不了 GPU，导致导出速度不如专业视频软件。
 
 ### 常见问题
 
@@ -134,8 +176,11 @@ autocut -c 22-52-00.mp4 22-52-00.srt 22-52-00.md
 
 4. **能不能使用 `pip` 安装?**
 
-   因为 AutoCut 的依赖 whisper 没有在 PyPI 发布包，所以目前只能用 `pip install git+https://github.com/mli/autocut.git` 这种方式发布。有需求的同学可以查看 whisper 模型是不是能直接在 huggingface hub 下载，从而摆脱 whisper 包的依赖。
+    whisper已经发布到PyPI了，可以直接用`pip install openai-whisper`安装。
+   
+   [https://github.com/openai/whisper#setup](https://github.com/openai/whisper#setup)
 
+   [https://pypi.org/project/openai-whisper/](https://pypi.org/project/openai-whisper/)
 
 ## 如何参与贡献
 

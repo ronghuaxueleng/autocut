@@ -3,6 +3,7 @@ import logging
 import os
 
 from . import utils
+from .type import WhisperMode, WhisperModel
 
 
 def main():
@@ -50,17 +51,90 @@ def main():
         "--lang",
         type=str,
         default="zh",
-        choices=["zh", "en"],
+        choices=[
+            "zh",
+            "en",
+            "Afrikaans",
+            "Arabic",
+            "Armenian",
+            "Azerbaijani",
+            "Belarusian",
+            "Bosnian",
+            "Bulgarian",
+            "Catalan",
+            "Croatian",
+            "Czech",
+            "Danish",
+            "Dutch",
+            "Estonian",
+            "Finnish",
+            "French",
+            "Galician",
+            "German",
+            "Greek",
+            "Hebrew",
+            "Hindi",
+            "Hungarian",
+            "Icelandic",
+            "Indonesian",
+            "Italian",
+            "Japanese",
+            "Kannada",
+            "Kazakh",
+            "Korean",
+            "Latvian",
+            "Lithuanian",
+            "Macedonian",
+            "Malay",
+            "Marathi",
+            "Maori",
+            "Nepali",
+            "Norwegian",
+            "Persian",
+            "Polish",
+            "Portuguese",
+            "Romanian",
+            "Russian",
+            "Serbian",
+            "Slovak",
+            "Slovenian",
+            "Spanish",
+            "Swahili",
+            "Swedish",
+            "Tagalog",
+            "Tamil",
+            "Thai",
+            "Turkish",
+            "Ukrainian",
+            "Urdu",
+            "Vietnamese",
+            "Welsh",
+        ],
         help="The output language of transcription",
     )
     parser.add_argument(
         "--prompt", type=str, default="", help="initial prompt feed into whisper"
     )
     parser.add_argument(
+        "--whisper-mode",
+        type=str,
+        default=WhisperMode.WHISPER.value,
+        choices=WhisperMode.get_values(),
+        help="Whisper inference mode: whisper: run whisper locally; openai: use openai api.",
+    )
+    parser.add_argument(
+        "--openai-rpm",
+        type=int,
+        default=3,
+        choices=[3, 50],
+        help="Openai Whisper API REQUESTS PER MINUTE(FREE USERS: 3RPM; PAID USERS: 50RPM). "
+        "More info: https://platform.openai.com/docs/guides/rate-limits/overview",
+    )
+    parser.add_argument(
         "--whisper-model",
         type=str,
-        default="small",
-        choices=["tiny", "base", "small", "medium", "large", "large-v2"],
+        default=WhisperModel.SMALL.value,
+        choices=WhisperModel.get_values(),
         help="The whisper model used to transcribe.",
     )
     parser.add_argument(
@@ -106,7 +180,7 @@ def main():
         elif len(args.inputs) == 1:
             trans_srt_to_md(args.encoding, args.force, args.inputs[0])
         else:
-            logging.warn(
+            logging.warning(
                 "Wrong number of files, please pass in a .srt file or an additional video file"
             )
     elif args.cut:
@@ -120,7 +194,7 @@ def main():
     elif args.s:
         utils.compact_rst(args.inputs[0], args.encoding)
     else:
-        logging.warn("No action, use -c, -t or -d")
+        logging.warning("No action, use -c, -t or -d")
 
 
 if __name__ == "__main__":
